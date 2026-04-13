@@ -340,6 +340,8 @@
   .nav-links a { width:100%; padding:8px 12px; }
 }
 </style>
+<script async defer src="https://scripts.simpleanalytics.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalytics.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
 </head>
 <body>
 <nav class="top-nav">
@@ -1742,6 +1744,15 @@
 
 <script>
   // Universal answer handler — uses data attributes to find correct answer
+  const _DOMAIN = 2;
+  function saEvent(name, meta) {
+    if (typeof window.sa_event === 'function') window.sa_event(name, meta);
+  }
+  function _taskFromId(id) {
+    const m = id.match(/^[qr](\d)(\d)/);
+    return m ? m[1] + '.' + m[2] : id;
+  }
+
   function pick(el, correct, qid) {
     const parent = el.closest('.exam-options');
     parent.querySelectorAll('.exam-option').forEach(o => o.classList.remove('correct','wrong'));
@@ -1757,11 +1768,15 @@
     // Show reveal
     const reveal = el.closest('.exam-body').querySelector('.exam-reveal');
     if (reveal) reveal.classList.add('visible');
+    saEvent('domain_question_answered', { domain: _DOMAIN, task: _taskFromId(qid), qid: qid, correct: correct ? 'yes' : 'no' });
   }
 
   function showReveal(id) {
     document.getElementById(id).classList.add('visible');
+    saEvent('domain_explanation_viewed', { domain: _DOMAIN, task: _taskFromId(id) });
   }
+
+  saEvent('domain_opened', { domain: _DOMAIN });
 
   // Active sidebar highlighting on scroll
   const allSections = document.querySelectorAll('[id]');

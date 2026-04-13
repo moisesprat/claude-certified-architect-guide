@@ -750,6 +750,8 @@ body {
   .nav-btns { justify-content: space-between; width: 100%; }
 }
 </style>
+<script async defer src="https://scripts.simpleanalytics.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalytics.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
 </head>
 <body>
 
@@ -818,6 +820,10 @@ function saveAttempt(attempt) {
 }
 
 // ── Exam setup ───────────────────────────────────────────────────────────────
+function saEvent(name, meta) {
+  if (typeof window.sa_event === 'function') window.sa_event(name, meta);
+}
+
 function startExam() {
   const scenarioSlugs = Object.keys(SCENARIO_META);
   // Shuffle and pick 4
@@ -841,6 +847,7 @@ function startExam() {
   examState.currentQ = 0;
   examState.phase = 'scenario-intro';
 
+  saEvent('exam_started', { scenarios: examState.selectedScenarios.length });
   render();
 }
 
@@ -885,6 +892,8 @@ function isLastQuestion(qi) {
 function selectAnswer(optionIdx) {
   if (examState.answers[examState.currentQ] !== null) return; // no change after selecting
   examState.answers[examState.currentQ] = optionIdx;
+  const q = examState.questions[examState.currentQ];
+  saEvent('exam_question_answered', { domain: q.domain, task: q.task, correct: optionIdx === q.correct ? 'yes' : 'no' });
   render();
 }
 
@@ -958,6 +967,12 @@ function finishExam() {
     timeUsed
   };
   saveAttempt(attempt);
+  saEvent('exam_completed', {
+    score: result.score,
+    passed: result.score >= PASS_THRESHOLD ? 'yes' : 'no',
+    questions_answered: examState.answers.filter(a => a !== null).length,
+    time_used_secs: timeUsed
+  });
   render();
 }
 

@@ -379,6 +379,8 @@
   }
   body { padding-top: var(--nav-h); }
 </style>
+<script async defer src="https://scripts.simpleanalytics.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalytics.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
 </head>
 <body>
 <nav class="top-nav">
@@ -488,9 +490,14 @@ function saveState(s) {
 
 let state = loadState();
 
+function saEvent(name, meta) {
+  if (typeof window.sa_event === 'function') window.sa_event(name, meta);
+}
+
 function toggleTask(id) {
   state[id] = !state[id];
   saveState(state);
+  saEvent('task_toggled', { task_id: id, checked: state[id] ? 'yes' : 'no' });
   render();
 }
 
