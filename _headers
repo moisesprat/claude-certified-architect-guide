@@ -1,0 +1,9 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/questions.js
+  Cache-Control: public, max-age=86400

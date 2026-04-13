@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Certified Architect Guide — Community Study Resource</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0f11;
+    --surface: #16181c;
+    --surface2: #1e2025;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8e9eb;
+    --text2: #8a8d94;
+    --text3: #555860;
+    --accent: #4ade80;
+    --accent-dim: rgba(74,222,128,0.12);
+    --accent-border: rgba(74,222,128,0.3);
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --nav-h: 52px;
+    --d1: #7c8cff;
+    --d2: #ff7c5c;
+    --d3: #ffc95c;
+    --d4: #5cceff;
+    --d5: #c45cff;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-top: var(--nav-h);
+  }
+
+  /* ── Top Navigation ── */
+  .top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(14,15,17,0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border2);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+  }
+  .top-nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+  }
+  .nav-brand {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--text3);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .nav-links a:hover { color: var(--text2); background: var(--surface2); }
+  .nav-links a.nav-active { color: var(--text); background: var(--surface2); }
+  .nav-exam-btn {
+    background: var(--accent-dim) !important;
+    border: 1px solid var(--accent-border) !important;
+    color: var(--accent) !important;
+  }
+  .nav-exam-btn:hover { background: rgba(74,222,128,0.2) !important; }
+  .nav-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 4px 8px;
+  }
+  @media (max-width: 720px) {
+    .nav-hamburger { display: block; }
+    .nav-links { display: none; position: absolute; top: var(--nav-h); left: 0; right: 0;
+      background: rgba(14,15,17,0.98); border-bottom: 1px solid var(--border2);
+      flex-direction: column; padding: 0.75rem 1rem; gap: 0.25rem; }
+    .nav-links.open { display: flex; }
+    .nav-links a { width: 100%; }
+  }
+
+  /* ── Layout ── */
+  .page { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 3rem 0 3.5rem;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 3rem;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .hero h1 strong { font-weight: 600; }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text2);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+  .hero-stat {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hero-stat-val {
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .hero-cta:hover { background: rgba(74,222,128,0.2); }
+  .hero-cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    margin-left: 10px;
+  }
+  .hero-cta-secondary:hover { color: var(--text); border-color: var(--border2); background: var(--surface2); }
+
+  /* ── Progress Widget ── */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 1rem;
+  }
+  .progress-widget {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .progress-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .progress-title {
+    font-size: 14px;
+    color: var(--text2);
+  }
+  .progress-score {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+  }
+  .progress-score span { color: var(--accent); }
+  .progress-score .denom { color: var(--text3); font-size: 14px; }
+  .global-bar-wrap {
+    height: 2px;
+    background: var(--border2);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+  .global-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .domain-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .domain-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .domain-bar-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    width: 24px;
+    flex-shrink: 0;
+  }
+  .domain-bar-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .domain-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+  .domain-bar-ct {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    width: 32px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .progress-link {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 1px;
+    transition: color 0.15s;
+  }
+  .progress-link:hover { color: var(--text2); }
+
+  /* ── Domain Cards ── */
+  .domain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 3rem;
+  }
+  .domain-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .domain-card:hover { border-color: var(--border2); background: var(--surface2); }
+  .domain-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .domain-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .domain-weight-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid var(--border2);
+    color: var(--text3);
+  }
+  .domain-card-name {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .domain-card-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+  }
+  .domain-card-cta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+  .domain-card:hover .domain-card-cta { color: var(--accent); }
+
+  /* ── How to use ── */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 3rem;
+  }
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .step-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .step-desc {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.6;
+  }
+
+  /* ── Exam Format Table ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin-bottom: 3rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border2);
+  }
+  tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .td-domain-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  td strong { color: var(--text); font-weight: 500; }
+
+  footer {
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="top-nav-inner">
+    <a href="./index.html" class="nav-brand">Claude Architect</a>
+    <button class="nav-hamburger" onclick="toggleNav()">&#9776;</button>
+    <div class="nav-links" id="nav-links">
+      <a href="./index.html">Home</a>
+      <a href="./domain1.html">D1</a>
+      <a href="./domain2.html">D2</a>
+      <a href="./domain3.html">D3</a>
+      <a href="./domain4.html">D4</a>
+      <a href="./domain5.html">D5</a>
+      <a href="./progress.html">Progress</a>
+      <a href="./exam.html" class="nav-exam-btn">Exam</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Anthropic Certification · Community Study Resource</div>
+    <h1><strong>Claude Certified Architect</strong><br>Foundations — Study Guide</h1>
+    <p class="hero-sub">A comprehensive prep guide for the Claude Certified Architect – Foundations exam. Covers all 5 domains, 30 task statements, and includes an exam simulator with realistic scenario-based questions.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span>Domains</span><span class="hero-stat-val">5</span></div>
+      <div class="hero-stat"><span>Task statements</span><span class="hero-stat-val">30</span></div>
+      <div class="hero-stat"><span>Exam duration</span><span class="hero-stat-val">2 hours</span></div>
+      <div class="hero-stat"><span>Questions</span><span class="hero-stat-val">60</span></div>
+      <div class="hero-stat"><span>Pass score</span><span class="hero-stat-val">720 / 1000</span></div>
+    </div>
+    <a href="./exam.html" class="hero-cta">Start Exam Simulation →</a>
+    <a href="./progress.html" class="hero-cta-secondary">View Progress</a>
+  </section>
+
+  <!-- PROGRESS WIDGET -->
+  <div class="section-label">Your Progress</div>
+  <div class="progress-widget">
+    <div class="progress-top">
+      <div class="progress-title">Tasks completed across all 5 domains</div>
+      <div class="progress-score"><span id="pw-done">0</span><span class="denom"> / 30</span></div>
+    </div>
+    <div class="global-bar-wrap">
+      <div class="global-bar" id="pw-bar" style="width:0%"></div>
+    </div>
+    <div class="domain-bars" id="pw-domain-bars"></div>
+    <a href="./progress.html" class="progress-link">Open full progress tracker →</a>
+  </div>
+
+  <!-- DOMAIN CARDS -->
+  <div class="section-label">Study Domains</div>
+  <div class="domain-grid">
+    <a href="./domain1.html" class="domain-card">
+      <div class="domain-card-top">
+        <div class="domain-dot" style="background:#7c8cff"></div>
+        <span class="domain-weight-badge">27%</span>
+      </div>
+      <div class="domain-card-name">Domain 1: Agentic Architecture &amp; Orchestration</div>
+      <div class="domain-card-meta">7 task statements · 21 questions</div>
+      <div class="domain-card-cta">Study →</div>
+    </a>
+    <a href="./domain2.html" class="domain-card">
+      <div class="domain-card-top">
+        <div class="domain-dot" style="background:#ff7c5c"></div>
+        <span class="domain-weight-badge">18%</span>
+      </div>
+      <div class="domain-card-name">Domain 2: Tool Design &amp; MCP Integration</div>
+      <div class="domain-card-meta">5 task statements · 15 questions</div>
+      <div class="domain-card-cta">Study →</div>
+    </a>
+    <a href="./domain3.html" class="domain-card">
+      <div class="domain-card-top">
+        <div class="domain-dot" style="background:#ffc95c"></div>
+        <span class="domain-weight-badge">20%</span>
+      </div>
+      <div class="domain-card-name">Domain 3: Claude Code Configuration &amp; Workflows</div>
+      <div class="domain-card-meta">6 task statements · 18 questions</div>
+      <div class="domain-card-cta">Study →</div>
+    </a>
+    <a href="./domain4.html" class="domain-card">
+      <div class="domain-card-top">
+        <div class="domain-dot" style="background:#5cceff"></div>
+        <span class="domain-weight-badge">20%</span>
+      </div>
+      <div class="domain-card-name">Domain 4: Prompt Engineering &amp; Structured Output</div>
+      <div class="domain-card-meta">6 task statements · 18 questions</div>
+      <div class="domain-card-cta">Study →</div>
+    </a>
+    <a href="./domain5.html" class="domain-card">
+      <div class="domain-card-top">
+        <div class="domain-dot" style="background:#c45cff"></div>
+        <span class="domain-weight-badge">15%</span>
+      </div>
+      <div class="domain-card-name">Domain 5: Context Management &amp; Reliability</div>
+      <div class="domain-card-meta">6 task statements · 18 questions</div>
+      <div class="domain-card-cta">Study →</div>
+    </a>
+  </div>
+
+  <!-- HOW TO USE -->
+  <div class="section-label">How to Use This Guide</div>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Study domain lessons</div>
+      <div class="step-desc">Read each domain's concepts, patterns, and anti-patterns. Mark tasks complete as you go.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">Practice questions</div>
+      <div class="step-desc">Each task has 3 scenario-based MCQs. All 4 options are plausible — one is definitively best.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">Simulate the exam</div>
+      <div class="step-desc">Take a full 60-question, 2-hour timed simulation across 4 random scenarios.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-title">Track your progress</div>
+      <div class="step-desc">Review domain scores and history from previous exam attempts. All state is stored locally.</div>
+    </div>
+  </div>
+
+  <!-- EXAM FORMAT TABLE -->
+  <div class="section-label">Exam Format</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>Exam Weight</th>
+          <th>Task Statements</th>
+          <th>Approx. Questions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="td-domain-dot" style="background:#7c8cff"></span><strong>Agentic Architecture &amp; Orchestration</strong></td>
+          <td>27%</td>
+          <td>7</td>
+          <td>~16</td>
+        </tr>
+        <tr>
+          <td><span class="td-domain-dot" style="background:#ff7c5c"></span><strong>Tool Design &amp; MCP Integration</strong></td>
+          <td>18%</td>
+          <td>5</td>
+          <td>~11</td>
+        </tr>
+        <tr>
+          <td><span class="td-domain-dot" style="background:#ffc95c"></span><strong>Claude Code Configuration &amp; Workflows</strong></td>
+          <td>20%</td>
+          <td>6</td>
+          <td>~12</td>
+        </tr>
+        <tr>
+          <td><span class="td-domain-dot" style="background:#5cceff"></span><strong>Prompt Engineering &amp; Structured Output</strong></td>
+          <td>20%</td>
+          <td>6</td>
+          <td>~12</td>
+        </tr>
+        <tr>
+          <td><span class="td-domain-dot" style="background:#c45cff"></span><strong>Context Management &amp; Reliability</strong></td>
+          <td>15%</td>
+          <td>6</td>
+          <td>~9</td>
+        </tr>
+        <tr>
+          <td colspan="4" style="color:var(--text3);font-family:var(--mono);font-size:11px;padding-top:12px;">
+            Total: 60 questions across 4 scenarios · 120 minutes · Pass score: 720 / 1000
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    Community study resource · Not affiliated with Anthropic · Pass score 720/1000
+  </footer>
+
+</div><!-- end .page -->
+
+<script>
+function toggleNav() {
+  document.getElementById('nav-links').classList.toggle('open');
+}
+(function(){
+  const page = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    if (a.getAttribute('href').split('/').pop() === page) a.classList.add('nav-active');
+  });
+})();
+
+// Progress widget — reads architect_exam_checklist_v1 from localStorage (read-only)
+(function() {
+  const TASK_IDS = {
+    1: ['1.1','1.2','1.3','1.4','1.5','1.6','1.7'],
+    2: ['2.1','2.2','2.3','2.4','2.5'],
+    3: ['3.1','3.2','3.3','3.4','3.5','3.6'],
+    4: ['4.1','4.2','4.3','4.4','4.5','4.6'],
+    5: ['5.1','5.2','5.3','5.4','5.5','5.6']
+  };
+  const DOMAIN_COLORS = { 1:'#7c8cff', 2:'#ff7c5c', 3:'#ffc95c', 4:'#5cceff', 5:'#c45cff' };
+  const DOMAIN_LABELS = { 1:'D1', 2:'D2', 3:'D3', 4:'D4', 5:'D5' };
+
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem('architect_exam_checklist_v1')) || {}; } catch(e) {}
+
+  let totalDone = 0, totalAll = 0;
+  const barsHtml = [];
+
+  for (let d = 1; d <= 5; d++) {
+    const tasks = TASK_IDS[d];
+    const done = tasks.filter(t => state[t]).length;
+    const pct = Math.round(done / tasks.length * 100);
+    totalDone += done;
+    totalAll += tasks.length;
+    barsHtml.push(`
+      <div class="domain-bar-row">
+        <span class="domain-bar-name">${DOMAIN_LABELS[d]}</span>
+        <div class="domain-bar-track">
+          <div class="domain-bar-fill" style="width:${pct}%;background:${DOMAIN_COLORS[d]}"></div>
+        </div>
+        <span class="domain-bar-ct">${done}/${tasks.length}</span>
+      </div>
+    `);
+  }
+
+  document.getElementById('pw-done').textContent = totalDone;
+  document.getElementById('pw-bar').style.width = Math.round(totalDone / totalAll * 100) + '%';
+  document.getElementById('pw-domain-bars').innerHTML = barsHtml.join('');
+})();
+</script>
+</body>
+</html>
