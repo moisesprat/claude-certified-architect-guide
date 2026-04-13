@@ -407,18 +407,13 @@ body {
   transition: border-color 0.12s, background 0.12s;
   user-select: none;
 }
-.option-item:hover:not(.eliminated):not(.selected) {
+.option-item:hover:not(.selected) {
   border-color: var(--border2);
   background: var(--surface2);
 }
 .option-item.selected {
   border-color: rgba(165,180,252,0.5);
   background: rgba(165,180,252,0.07);
-}
-.option-item.eliminated {
-  opacity: 0.35;
-  cursor: not-allowed;
-  pointer-events: none;
 }
 .option-item.correct-reveal {
   border-color: var(--accent-border);
@@ -468,7 +463,7 @@ body {
   flex-wrap: wrap;
 }
 
-.eliminate-btn {
+.flag-btn {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.08em;
@@ -482,8 +477,7 @@ body {
   transition: all 0.15s;
   white-space: nowrap;
 }
-.eliminate-btn:hover:not(:disabled) { color: var(--text2); background: var(--surface2); }
-.eliminate-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.flag-btn:hover { color: var(--text2); background: var(--surface2); }
 
 .nav-btns {
   display: flex;
@@ -949,8 +943,8 @@ body {
   .nav-btns { justify-content: space-between; width: 100%; }
 }
 </style>
-<script async defer src="https://scripts.simpleanalytics.com/latest.js"></script>
-<noscript><img src="https://queue.simpleanalytics.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
+<script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
 </head>
 <body>
 
@@ -997,7 +991,6 @@ let examState = {
   selectedScenarios: [],
   questions: [],
   answers: [],          // null | 0-3
-  eliminated: [],       // null | 0-3
   flagged: [],          // bool — flagged for review
   startTime: null,
   timerRemaining: EXAM_SECS,
@@ -1041,7 +1034,6 @@ function startExam() {
   });
 
   examState.answers = new Array(examState.questions.length).fill(null);
-  examState.eliminated = new Array(examState.questions.length).fill(null);
   examState.flagged = new Array(examState.questions.length).fill(false);
   examState.startTime = null;
   examState.timerRemaining = EXAM_SECS;
@@ -1092,20 +1084,9 @@ function isLastQuestion(qi) {
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 function selectAnswer(optionIdx) {
-  if (examState.eliminated[examState.currentQ] === optionIdx) return; // can't select eliminated
   examState.answers[examState.currentQ] = optionIdx;
   const q = examState.questions[examState.currentQ];
   saEvent('exam_question_answered', { domain: q.domain, task: q.task, correct: optionIdx === q.correct ? 'yes' : 'no' });
-  render();
-}
-
-function eliminateAnswer() {
-  const qi = examState.currentQ;
-  const q = examState.questions[qi];
-  if (examState.eliminated[qi] !== null) return;
-  // Cannot eliminate the currently selected answer
-  if (examState.answers[qi] === q.canEliminate) return;
-  examState.eliminated[qi] = q.canEliminate;
   render();
 }
 
@@ -1304,7 +1285,6 @@ function renderSetup() {
       <ul>
         <li>4 scenarios are randomly selected from a pool of 5. Each scenario has 15 questions.</li>
         <li>Questions span all 5 exam domains, weighted proportionally to the real exam.</li>
-        <li>Each question has an "Eliminate one answer" option — one-time use per question.</li>
         <li>Flag any question during the exam — flagged questions appear on a review screen before you submit.</li>
         <li>From the flagged review, jump to any question to change your answer, then return.</li>
         <li>You can change your answer and navigate back within a scenario block.</li>
@@ -1359,7 +1339,6 @@ function renderQuestion() {
   const qi = examState.currentQ;
   const q = examState.questions[qi];
   const answered = examState.answers[qi];
-  const eliminated = examState.eliminated[qi];
   const isFlagged = examState.flagged[qi];
   const scenarioIdx = scenarioIndexForQ(qi);
   const posInScenario = (qi % 15) + 1;
@@ -1370,24 +1349,14 @@ function renderQuestion() {
 
   // Build options — no correct/wrong reveal during exam, allow re-selection
   const optionsHtml = q.options.map((opt, idx) => {
-    let cls = 'option-item';
-    if (idx === eliminated) cls += ' eliminated';
-    else if (idx === answered) cls += ' selected';
-
-    const clickable = idx !== eliminated;
-    const onclick = clickable ? `onclick="selectAnswer(${idx})"` : '';
+    const cls = 'option-item' + (idx === answered ? ' selected' : '');
     return `
-      <li class="${cls}" ${onclick}>
+      <li class="${cls}" onclick="selectAnswer(${idx})">
         <span class="option-letter">${opt.letter}</span>
         <span class="option-text">${opt.text}</span>
       </li>
     `;
   }).join('');
-
-  // Eliminate button
-  const elimUsed = eliminated !== null;
-  const elimWouldHitSelected = examState.answers[qi] === q.canEliminate;
-  const elimDisabled = elimUsed ? 'disabled' : (elimWouldHitSelected ? 'disabled' : '');
 
   return `
     <div class="exam-header-bar">
@@ -1411,10 +1380,7 @@ function renderQuestion() {
     </div>
 
     <div class="question-actions">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <button class="eliminate-btn" onclick="eliminateAnswer()" ${elimDisabled}>${elimUsed ? '✓ Eliminated' : 'Eliminate one answer'}</button>
-        <button class="eliminate-btn" onclick="flagQuestion()" style="${isFlagged ? 'border-color:rgba(251,191,36,0.5);color:#fbbf24;background:rgba(251,191,36,0.07)' : ''}">${isFlagged ? '⚑ Flagged' : '⚐ Flag for review'}</button>
-      </div>
+      <button class="flag-btn" onclick="flagQuestion()" style="${isFlagged ? 'border-color:rgba(251,191,36,0.5);color:#fbbf24;background:rgba(251,191,36,0.07)' : ''}">${isFlagged ? '⚑ Flagged' : '⚐ Flag for review'}</button>
       <div class="nav-btns">
         ${examState.fromFlaggedReview
           ? `<button class="btn-back" onclick="returnToFlaggedReview()">← Back to review</button>`
