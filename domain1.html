@@ -1343,7 +1343,7 @@ Production result:
 
     <section class="section" id="ts15-concept">
       <h3 class="section-title">The Core Concept</h3>
-      <p>Hooks intercept the tool call lifecycle at two points: <strong>before</strong> a tool is called (pre-call interception) and <strong>after</strong> it returns (PostToolUse). This gives you a centralized place to enforce compliance rules and normalize data formats before Claude reasons about tool results.</p>
+      <p>Hooks intercept the tool call lifecycle at two points: <strong>before</strong> a tool is called (tool call interception) and <strong>after</strong> it returns (PostToolUse). This gives you a centralized place to enforce compliance rules and normalize data formats before Claude reasons about tool results.</p>
       <div class="callout callout-warn">
         <div class="callout-icon">⚡</div>
         <div class="callout-body"><strong>The Decision Rule:</strong> Use hooks when the business rule requires <em>guaranteed</em> compliance. Use prompts when probabilistic compliance is acceptable. The exam will present scenarios — your job is to classify them correctly. Financial operations, refund thresholds, and PII handling = hooks. Style guidelines and output formatting = prompts.</div>
@@ -1360,7 +1360,7 @@ Production result:
         </div>
         <div class="k-card">
           <div class="k-card-icon">📤</div>
-          <h4>Pre-Call Interception</h4>
+          <h4>Tool Call Interception Hook</h4>
           <p>Intercepts outgoing tool calls before execution. Use for: blocking policy-violating actions (refunds exceeding $500), redirecting to alternative workflows, logging compliance events.</p>
         </div>
         <div class="k-card">
@@ -1402,7 +1402,7 @@ Production result:
       </div>
       <div class="code-block">
         <div class="code-header">
-          <span class="code-label">python — Pre-call: block refunds exceeding policy threshold</span>
+          <span class="code-label">python — Tool call interception: block refunds exceeding policy threshold</span>
           <span class="code-tag tag-good">COMPLIANCE ENFORCEMENT</span>
         </div>
         <pre><span class="hl-fn">def</span> <span class="hl-key">pre_call_hook</span>(tool_name, tool_input, session_state):

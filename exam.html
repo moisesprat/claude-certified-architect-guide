@@ -407,7 +407,7 @@ body {
   transition: border-color 0.12s, background 0.12s;
   user-select: none;
 }
-.option-item:hover:not(.eliminated):not(.selected):not(.correct-reveal):not(.wrong-reveal) {
+.option-item:hover:not(.eliminated):not(.selected) {
   border-color: var(--border2);
   background: var(--surface2);
 }
@@ -547,6 +547,205 @@ body {
   font-size: 13px;
   color: var(--text2);
   line-height: 1.65;
+}
+
+/* ── Flagged pre-submission review ──────────────────────── */
+.fr-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+.fr-title {
+  font-size: 20px;
+  font-weight: 300;
+  margin-bottom: 0.5rem;
+}
+.fr-subtitle {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+.fr-warning {
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.3);
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--danger);
+  font-family: var(--mono);
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+}
+.fr-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+.fr-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.fr-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.fr-qnum {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: #fbbf24;
+  background: rgba(251,191,36,0.1);
+  border: 1px solid rgba(251,191,36,0.3);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.fr-domain {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.04em;
+}
+.fr-stem {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.fr-row-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.fr-current {
+  font-size: 12px;
+  flex: 1;
+}
+.fr-answer {
+  color: rgba(165,180,252,0.9);
+  background: rgba(165,180,252,0.07);
+  border: 1px solid rgba(165,180,252,0.2);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.fr-answer.skipped {
+  color: var(--text3);
+  background: transparent;
+  border-color: var(--border);
+}
+.fr-edit-btn {
+  background: var(--surface2);
+  color: var(--text2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+.fr-edit-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
+.fr-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* ── Review section ─────────────────────────────────────── */
+.review-toggle-btn {
+  margin: 1.5rem auto 0;
+  display: block;
+  background: var(--surface2);
+  color: var(--text2);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.review-toggle-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
+
+.review-list { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+
+.review-q {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.review-q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.05em;
+}
+.review-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+.review-badge.pass { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+.review-badge.fail { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
+.review-badge.skipped { background: rgba(255,255,255,0.04); color: var(--text3); border: 1px solid var(--border); }
+
+.review-stem {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+  border-bottom: 1px solid var(--border);
+}
+.review-opts { padding: 8px 12px; display: flex; flex-direction: column; gap: 5px; }
+.review-opt {
+  font-size: 12px;
+  color: var(--text3);
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  padding: 4px 7px;
+  border-radius: 5px;
+}
+.review-opt.correct { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-border); }
+.review-opt.wrong-chosen { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
+.review-opt .ro-letter {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  min-width: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.review-explanation {
+  padding: 8px 12px 10px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+}
+.review-explanation-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 4px;
 }
 
 /* ── Phase: results ──────────────────────────────────────── */
@@ -797,13 +996,15 @@ const DOMAIN_LABELS = {
 let examState = {
   selectedScenarios: [],
   questions: [],
-  answers: [],       // null | 0-3
-  eliminated: [],    // null | 0-3
-  revealed: [],      // bool — show explanation
+  answers: [],          // null | 0-3
+  eliminated: [],       // null | 0-3
+  flagged: [],          // bool — flagged for review
   startTime: null,
   timerRemaining: EXAM_SECS,
   currentQ: 0,
-  phase: 'setup'     // setup | scenario-intro | question | results | history
+  phase: 'setup',       // setup | scenario-intro | question | flagged-review | results | history
+  fromFlaggedReview: false,  // true when jumping to a question from the flagged-review screen
+  reviewMode: null      // null | 'all' | 'flagged'  (post-results review)
 };
 
 let timerInterval = null;
@@ -841,11 +1042,12 @@ function startExam() {
 
   examState.answers = new Array(examState.questions.length).fill(null);
   examState.eliminated = new Array(examState.questions.length).fill(null);
-  examState.revealed = new Array(examState.questions.length).fill(false);
+  examState.flagged = new Array(examState.questions.length).fill(false);
   examState.startTime = null;
   examState.timerRemaining = EXAM_SECS;
   examState.currentQ = 0;
   examState.phase = 'scenario-intro';
+  examState.reviewMode = null;
 
   saEvent('exam_started', { scenarios: examState.selectedScenarios.length });
   render();
@@ -890,7 +1092,7 @@ function isLastQuestion(qi) {
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 function selectAnswer(optionIdx) {
-  if (examState.answers[examState.currentQ] !== null) return; // no change after selecting
+  if (examState.eliminated[examState.currentQ] === optionIdx) return; // can't select eliminated
   examState.answers[examState.currentQ] = optionIdx;
   const q = examState.questions[examState.currentQ];
   saEvent('exam_question_answered', { domain: q.domain, task: q.task, correct: optionIdx === q.correct ? 'yes' : 'no' });
@@ -907,8 +1109,26 @@ function eliminateAnswer() {
   render();
 }
 
-function showReveal() {
-  examState.revealed[examState.currentQ] = true;
+function flagQuestion() {
+  examState.flagged[examState.currentQ] = !examState.flagged[examState.currentQ];
+  render();
+}
+
+function toggleReview(mode) {
+  examState.reviewMode = examState.reviewMode === mode ? null : mode;
+  render();
+}
+
+function jumpToFlagged(qi) {
+  examState.currentQ = qi;
+  examState.fromFlaggedReview = true;
+  examState.phase = 'question';
+  render();
+}
+
+function returnToFlaggedReview() {
+  examState.fromFlaggedReview = false;
+  examState.phase = 'flagged-review';
   render();
 }
 
@@ -916,8 +1136,22 @@ function goNext() {
   const qi = examState.currentQ;
   const scenarioIdx = scenarioIndexForQ(qi);
 
+  if (examState.fromFlaggedReview) {
+    // Return to the flagged-review screen after editing a question
+    examState.fromFlaggedReview = false;
+    examState.phase = 'flagged-review';
+    render();
+    return;
+  }
+
   if (isLastQuestion(qi)) {
-    finishExam();
+    const hasFlagged = examState.flagged.some(Boolean);
+    if (hasFlagged) {
+      examState.phase = 'flagged-review';
+      render();
+    } else {
+      finishExam();
+    }
     return;
   }
 
@@ -1030,6 +1264,7 @@ function render() {
     case 'setup': app.innerHTML = renderSetup(); break;
     case 'scenario-intro': app.innerHTML = renderScenarioIntro(); break;
     case 'question': app.innerHTML = renderQuestion(); updateTimer(); break;
+    case 'flagged-review': app.innerHTML = renderFlaggedReview(); updateTimer(); break;
     case 'results': app.innerHTML = renderResults(); break;
     case 'history': app.innerHTML = renderHistory(); break;
   }
@@ -1070,7 +1305,10 @@ function renderSetup() {
         <li>4 scenarios are randomly selected from a pool of 5. Each scenario has 15 questions.</li>
         <li>Questions span all 5 exam domains, weighted proportionally to the real exam.</li>
         <li>Each question has an "Eliminate one answer" option — one-time use per question.</li>
-        <li>You can navigate back within a scenario block but not to previous scenarios.</li>
+        <li>Flag any question during the exam — flagged questions appear on a review screen before you submit.</li>
+        <li>From the flagged review, jump to any question to change your answer, then return.</li>
+        <li>You can change your answer and navigate back within a scenario block.</li>
+        <li>Correct answers and explanations are revealed only after you submit.</li>
         <li>Score = correct answers × 1000 / 60. Passing score is 720/1000.</li>
         <li>Your last 20 attempts are saved locally in your browser.</li>
       </ul>
@@ -1122,7 +1360,7 @@ function renderQuestion() {
   const q = examState.questions[qi];
   const answered = examState.answers[qi];
   const eliminated = examState.eliminated[qi];
-  const revealed = examState.revealed[qi];
+  const isFlagged = examState.flagged[qi];
   const scenarioIdx = scenarioIndexForQ(qi);
   const posInScenario = (qi % 15) + 1;
   const pct = Math.round((qi / TOTAL_Q) * 100);
@@ -1130,20 +1368,13 @@ function renderQuestion() {
   const isBackDisabled = isFirstInScenario(qi);
   const isLast = isLastQuestion(qi);
 
-  // Build options
+  // Build options — no correct/wrong reveal during exam, allow re-selection
   const optionsHtml = q.options.map((opt, idx) => {
     let cls = 'option-item';
     if (idx === eliminated) cls += ' eliminated';
-    else if (answered !== null) {
-      if (idx === q.correct) cls += ' correct-reveal';
-      else if (idx === answered) cls += ' wrong-reveal';
-    } else if (idx === answered) {
-      cls += ' selected';
-    }
-    // Before answering: mark selected state
-    if (answered === null && idx === examState.answers[qi]) cls += ' selected';
+    else if (idx === answered) cls += ' selected';
 
-    const clickable = answered === null && idx !== eliminated;
+    const clickable = idx !== eliminated;
     const onclick = clickable ? `onclick="selectAnswer(${idx})"` : '';
     return `
       <li class="${cls}" ${onclick}>
@@ -1153,28 +1384,14 @@ function renderQuestion() {
     `;
   }).join('');
 
-  // Reveal panel
-  const revealHtml = revealed && answered !== null ? `
-    <div class="reveal-panel visible">
-      <div class="reveal-label">Correct: ${q.options[q.correct].letter}</div>
-      <div class="reveal-text">${q.explanation}</div>
-    </div>
-  ` : '';
-
-  // Show explanation button
-  const showRevealBtn = answered !== null && !revealed ? `
-    <button class="btn-secondary" onclick="showReveal()" style="margin-top:0.75rem;font-size:10px;padding:6px 12px">Show explanation</button>
-  ` : '';
-
   // Eliminate button
   const elimUsed = eliminated !== null;
-  const elimWouldHitSelected = answered === null && examState.answers[qi] === q.canEliminate;
-  const elimTitle = elimUsed ? 'Already used' : (elimWouldHitSelected ? 'Deselect this option first' : 'Eliminate one answer');
-  const elimDisabled = elimUsed || answered !== null ? 'disabled' : (elimWouldHitSelected ? 'disabled title="Deselect this option first"' : '');
+  const elimWouldHitSelected = examState.answers[qi] === q.canEliminate;
+  const elimDisabled = elimUsed ? 'disabled' : (elimWouldHitSelected ? 'disabled' : '');
 
   return `
     <div class="exam-header-bar">
-      <div class="exam-progress-text">Q${qi + 1} / ${TOTAL_Q} &nbsp;·&nbsp; Scenario ${scenarioIdx + 1}, Q${posInScenario}/15</div>
+      <div class="exam-progress-text">Q${qi + 1} / ${TOTAL_Q} &nbsp;·&nbsp; Scenario ${scenarioIdx + 1}, Q${posInScenario}/15${examState.flagged.filter(Boolean).length > 0 ? ` &nbsp;·&nbsp; <span style="color:#fbbf24">⚑ ${examState.flagged.filter(Boolean).length} flagged</span>` : ''}</div>
       <div class="timer" id="timer-display">--:--</div>
     </div>
 
@@ -1191,17 +1408,77 @@ function renderQuestion() {
       </div>
       <div class="question-stem">${q.stem}</div>
       <ul class="options-list">${optionsHtml}</ul>
-      ${showRevealBtn}
-      ${revealHtml}
     </div>
 
     <div class="question-actions">
-      <button class="eliminate-btn" onclick="eliminateAnswer()" ${elimDisabled}>${elimUsed ? '✓ Eliminated' : 'Eliminate one answer'}</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="eliminate-btn" onclick="eliminateAnswer()" ${elimDisabled}>${elimUsed ? '✓ Eliminated' : 'Eliminate one answer'}</button>
+        <button class="eliminate-btn" onclick="flagQuestion()" style="${isFlagged ? 'border-color:rgba(251,191,36,0.5);color:#fbbf24;background:rgba(251,191,36,0.07)' : ''}">${isFlagged ? '⚑ Flagged' : '⚐ Flag for review'}</button>
+      </div>
       <div class="nav-btns">
-        <button class="btn-back" onclick="goBack()" ${isBackDisabled ? 'disabled' : ''}>← Back</button>
-        <button class="btn-next ${isLast ? 'submit-btn' : ''}" onclick="goNext()">
-          ${isLast ? 'Submit Exam' : 'Next →'}
+        ${examState.fromFlaggedReview
+          ? `<button class="btn-back" onclick="returnToFlaggedReview()">← Back to review</button>`
+          : `<button class="btn-back" onclick="goBack()" ${isBackDisabled ? 'disabled' : ''}>← Back</button>`
+        }
+        <button class="btn-next ${isLast && !examState.fromFlaggedReview ? 'submit-btn' : ''}" onclick="goNext()">
+          ${examState.fromFlaggedReview
+            ? 'Done ✓'
+            : isLast
+              ? (examState.flagged.some(Boolean) ? 'Review flagged →' : 'Finish Exam')
+              : 'Next →'}
         </button>
+      </div>
+    </div>
+  `;
+}
+
+// ── Flagged review screen (pre-submission) ────────────────────────────────────
+function renderFlaggedReview() {
+  const flaggedItems = examState.questions
+    .map((q, i) => ({ q, i, answer: examState.answers[i] }))
+    .filter((_, i) => examState.flagged[i]);
+
+  const rows = flaggedItems.map(({ q, i, answer }) => {
+    const answerText = answer !== null
+      ? `<span class="fr-answer">${q.options[answer].letter} — ${q.options[answer].text}</span>`
+      : `<span class="fr-answer skipped">No answer selected</span>`;
+
+    return `
+      <div class="fr-row">
+        <div class="fr-row-meta">
+          <span class="fr-qnum">Q${i + 1}</span>
+          <span class="fr-domain">Domain ${q.domain} · Task ${q.task}</span>
+        </div>
+        <div class="fr-stem">${q.stem}</div>
+        <div class="fr-row-footer">
+          <div class="fr-current">${answerText}</div>
+          <button class="fr-edit-btn" onclick="jumpToFlagged(${i})">Edit answer →</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const unansweredFlagged = flaggedItems.filter(({ answer }) => answer === null).length;
+  const warningHtml = unansweredFlagged > 0
+    ? `<div class="fr-warning">${unansweredFlagged} flagged question${unansweredFlagged > 1 ? 's have' : ' has'} no answer selected.</div>`
+    : '';
+
+  return `
+    <div class="exam-header-bar">
+      <div class="exam-progress-text">Review flagged — ${flaggedItems.length} question${flaggedItems.length !== 1 ? 's' : ''}</div>
+      <div class="timer" id="timer-display">--:--</div>
+    </div>
+
+    <div class="fr-wrap">
+      <h2 class="fr-title">Review Flagged Questions</h2>
+      <p class="fr-subtitle">Check your answers below. Click <strong>Edit answer</strong> to change a selection, then return here. When you're done, submit the exam.</p>
+
+      ${warningHtml}
+      <div class="fr-list">${rows}</div>
+
+      <div class="fr-actions">
+        <button class="btn-secondary" onclick="examState.currentQ = ${TOTAL_Q - 1}; examState.phase = 'question'; render()">← Back to exam</button>
+        <button class="btn-primary" onclick="finishExam()">Submit Exam →</button>
       </div>
     </div>
   `;
@@ -1243,6 +1520,56 @@ function renderResults() {
     `;
   }).join('');
 
+  // Per-question review list
+  const flaggedCount = examState.flagged.filter(Boolean).length;
+
+  function buildReviewList(questions, answers, flagged, filterMode) {
+    const items = questions.map((q, i) => {
+      if (filterMode === 'flagged' && !flagged[i]) return '';
+      const userAns = answers[i];
+      const correct = userAns === q.correct;
+      const skipped = userAns === null;
+      let badge, badgeCls;
+      if (skipped) { badge = 'Skipped'; badgeCls = 'skipped'; }
+      else if (correct) { badge = '✓ Correct'; badgeCls = 'pass'; }
+      else { badge = '✗ Wrong'; badgeCls = 'fail'; }
+
+      const optsHtml = q.options.map((opt, idx) => {
+        let cls = 'review-opt';
+        if (idx === q.correct) cls += ' correct';
+        else if (idx === userAns) cls += ' wrong-chosen';
+        return `<div class="${cls}"><span class="ro-letter">${opt.letter}</span>${opt.text}</div>`;
+      }).join('');
+
+      const flagIcon = flagged[i] ? '<span style="color:#fbbf24;margin-left:6px">⚑</span>' : '';
+
+      return `
+        <div class="review-q">
+          <div class="review-q-header">
+            <span>Q${i+1} &nbsp;·&nbsp; Domain ${q.domain} &nbsp;·&nbsp; Task ${q.task}${flagIcon}</span>
+            <span class="review-badge ${badgeCls}">${badge}</span>
+          </div>
+          <div class="review-stem">${q.stem}</div>
+          <div class="review-opts">${optsHtml}</div>
+          <div class="review-explanation">
+            <div class="review-explanation-label">Explanation</div>
+            ${q.explanation}
+          </div>
+        </div>
+      `;
+    }).join('');
+    return `<div class="review-list">${items}</div>`;
+  }
+
+  const reviewHtml = examState.reviewMode
+    ? buildReviewList(examState.questions, examState.answers, examState.flagged, examState.reviewMode)
+    : '';
+
+  const allActiveStyle = examState.reviewMode === 'all'
+    ? 'style="border-color:rgba(165,180,252,0.5);color:#a5b4fc;background:rgba(165,180,252,0.07)"' : '';
+  const flagActiveStyle = examState.reviewMode === 'flagged'
+    ? 'style="border-color:rgba(251,191,36,0.5);color:#fbbf24;background:rgba(251,191,36,0.07)"' : '';
+
   return `
     <div class="results-score-circle ${passed ? 'passed' : 'failed'}">
       <div class="results-score-num">${result.score}</div>
@@ -1267,7 +1594,14 @@ function renderResults() {
       ${scenarioRows}
     </div>
 
-    <div class="results-btns">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:1.5rem">
+      <button class="review-toggle-btn" onclick="toggleReview('all')" ${allActiveStyle}>Review all answers (${TOTAL_Q})</button>
+      ${flaggedCount > 0 ? `<button class="review-toggle-btn" onclick="toggleReview('flagged')" ${flagActiveStyle}>Review flagged only (${flaggedCount})</button>` : ''}
+    </div>
+
+    ${reviewHtml}
+
+    <div class="results-btns" style="margin-top:1.5rem">
       <button class="btn-primary" onclick="resetToSetup(); startExam()">New Exam →</button>
       <button class="btn-secondary" onclick="showHistory()">View History</button>
       <button class="btn-secondary" onclick="resetToSetup()">← Home</button>

@@ -1492,7 +1492,7 @@ Please re-extract with these corrections applied."""</span>
         <button class="show-answer-btn" onclick="showReveal('r45b')">Show explanation</button>
         <div class="exam-reveal" id="r45b">
           <div class="reveal-label">Correct: C</div>
-          <div class="reveal-text"><strong>C is correct.</strong> The ticket arrives at 11:58 PM and the next batch job runs at midnight — 2 minutes later. Processing takes 24 hours, completing at approximately 12:02 AM (day+2). The 36-hour SLA window closes at 11:58 AM on day+2, which is approximately 12 hours after processing completes. This leaves 12 hours of buffer. A (36 hours) ignores the 24-hour processing delay. B (24 hours) ignores that processing time consumes most of the SLA window. D (0 hours) is wrong because the batch runs quickly after arrival.</div>
+          <div class="reveal-text"><strong>C is correct.</strong> Trace the timeline: ticket arrives at 11:58 PM (T=0) → SLA deadline is T+36h = 11:58 AM day+2. The next batch runs at midnight (T+2 min) and processing takes 24 hours, so the batch completes at ~12:02 AM day+2. From that completion point to the SLA deadline (11:58 AM day+2) is approximately 12 hours of buffer remaining. <strong>A (36 hours)</strong> treats the full SLA window as available buffer, ignoring that 24 hours are consumed by processing. <strong>B (24 hours)</strong> misidentifies the processing latency itself as the buffer. <strong>D (0 hours)</strong> would only be correct if the batch ran after the SLA window had already closed — it runs just 2 minutes after arrival.</div>
         </div>
       </div>
     </div>
